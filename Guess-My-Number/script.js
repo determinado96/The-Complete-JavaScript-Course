@@ -14,6 +14,9 @@ const numberElement = document.querySelector(".number");
 const highscoreElement = document.querySelector(".highscore");
 const checkBtn = document.querySelector(".check");
 const againBtn = document.querySelector(".again");
+const guessHistoryElement = document.querySelector(".guess-history");
+const guessHistoryListElement = document.querySelector(".guess-history-list");
+const guessHistoryList = [];
 
 // UI functions
 const displayMessage = function (msg) {
@@ -37,6 +40,16 @@ const displaySecretNumber = function (number) {
   numberElement.textContent = number;
 };
 
+const addGuessToHistory = function (guess) {
+  guessHistoryList.push(guess);
+  guessHistoryListElement.textContent = guessHistoryList.join(", ");
+  guessHistoryElement.style.display = "block";
+};
+
+const disableCheckBtn = function () {
+  checkBtn.disabled = true;
+}
+
 checkBtn.addEventListener("click", function () {
   const guess = Number(guessInput.value);
 
@@ -47,11 +60,12 @@ checkBtn.addEventListener("click", function () {
     displaySecretNumber(secretNumber);
     updateBackgroundColor("#60b347");
     numberElement.style.width = "30rem";
-
+    addGuessToHistory(guess);
     if (score > highscore) {
       highscore = score;
       highscoreElement.textContent = highscore;
     }
+    disableCheckBtn();
   } else if (guess !== secretNumber) {
     if (score > 1) {
       displayMessage(guess > secretNumber ? "📈 Too high!" : "📉 Too low!");
@@ -60,8 +74,11 @@ checkBtn.addEventListener("click", function () {
       displayMessage("💥 You lost the game!");
       labelScore.textContent = 0;
       updateBackgroundColor("#ff0000");
+      disableCheckBtn();
     }
+    addGuessToHistory(guess);
   }
+  console.log(guessHistoryList);
 });
 
 document.querySelector(".again").addEventListener("click", function () {
@@ -73,4 +90,8 @@ document.querySelector(".again").addEventListener("click", function () {
   updateScoreLabel(score);
   displaySecretNumber("?");
   updateBackgroundColor("#222");
+
+  guessHistoryList.length = 0;
+  guessHistoryListElement.textContent = "";
+  guessHistoryElement.style.display = "none";
 });
