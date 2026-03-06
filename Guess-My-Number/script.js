@@ -46,8 +46,8 @@ const addGuessToHistory = function (guess) {
   guessHistoryElement.style.display = "block";
 };
 
-const disableCheckBtn = function () {
-  checkBtn.disabled = true;
+const disableCheckBtn = function(value) {
+  checkBtn.disabled = value;
 }
 
 checkBtn.addEventListener("click", function () {
@@ -65,7 +65,7 @@ checkBtn.addEventListener("click", function () {
       highscore = score;
       highscoreElement.textContent = highscore;
     }
-    disableCheckBtn();
+    disableCheckBtn(true);
   } else if (guess !== secretNumber) {
     if (score > 1) {
       displayMessage(guess > secretNumber ? "📈 Too high!" : "📉 Too low!");
@@ -74,11 +74,10 @@ checkBtn.addEventListener("click", function () {
       displayMessage("💥 You lost the game!");
       labelScore.textContent = 0;
       updateBackgroundColor("#ff0000");
-      disableCheckBtn();
+      disableCheckBtn(true);
     }
     addGuessToHistory(guess);
   }
-  console.log(guessHistoryList);
 });
 
 document.querySelector(".again").addEventListener("click", function () {
@@ -94,4 +93,6 @@ document.querySelector(".again").addEventListener("click", function () {
   guessHistoryList.length = 0;
   guessHistoryListElement.textContent = "";
   guessHistoryElement.style.display = "none";
+
+  disableCheckBtn(false);
 });
